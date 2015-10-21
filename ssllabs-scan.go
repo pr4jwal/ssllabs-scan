@@ -51,9 +51,9 @@ const (
 	LOG_TRACE    = 8
 )
 
-var USER_AGENT = "ssllabs-scan v1.2.0 (dev $Id$)"
+//var USER_AGENT = "ssllabs-scan v1.2.0 (dev $Id$)"
 
-var logLevel = LOG_NOTICE
+// var logLevel = LOG_NOTICE
 
 // How many assessment do we have in progress?
 var activeAssessments = 0
@@ -624,11 +624,6 @@ func (manager *Manager) run() {
 		close(manager.FrontendEventChannel)
 	}
 
-	if logLevel >= LOG_NOTICE {
-		for _, message := range labsInfo.Messages {
-			log.Printf("[NOTICE] Server message: %v", message)
-		}
-	}
 
 	maxAssessments = labsInfo.MaxAssessments
 
@@ -665,11 +660,9 @@ func (manager *Manager) run() {
 					if len(e.report.Endpoints) == 0 {
 						msg = fmt.Sprintf("[WARN] Assessment failed: %v", e.host)
 					} else if len(e.report.Endpoints) > 1 {
-						msg = fmt.Sprintf("[INFO] Assessment complete: %v",
-							e.host)
+						msg = fmt.Sprintf(e.host)
 					} else {
-						msg = fmt.Sprintf("[INFO] Assessment complete: %v",
-							e.host)
+						msg = fmt.Sprintf(e.host)
 					}
 
 					for _, endpoint := range e.report.Endpoints {
