@@ -322,15 +322,6 @@ func invokeGetRepeatedly(url string) (*http.Response, []byte, error) {
 				}
 			}
 
-			if logLevel >= LOG_NOTICE {
-				for key, values := range resp.Header {
-					if strings.ToLower(key) == "x-message" {
-						for _, value := range values {
-							log.Printf("[NOTICE] Server message: %v\n", value)
-						}
-					}
-				}
-			}
 
 			// Update current assessments.
 
@@ -633,10 +624,6 @@ func (manager *Manager) run() {
 		close(manager.FrontendEventChannel)
 	}
 
-	if logLevel >= LOG_INFO {
-		log.Printf("[INFO] SSL Labs v%v (criteria version %v)", labsInfo.EngineVersion, labsInfo.CriteriaVersion)
-	}
-
 	if logLevel >= LOG_NOTICE {
 		for _, message := range labsInfo.Messages {
 			log.Printf("[NOTICE] Server message: %v", message)
@@ -670,24 +657,19 @@ func (manager *Manager) run() {
 				manager.hostProvider.retry(e.host)
 			}
 
-			if e.eventType == ASSESSMENT_STARTING {
-				if logLevel >= LOG_INFO {
-					log.Printf("[INFO] Assessment starting: %v", e.host)
-				}
-			}
 
 			if e.eventType == ASSESSMENT_COMPLETE {
 				if logLevel >= LOG_INFO {
 					msg := ""
 
 					if len(e.report.Endpoints) == 0 {
-						msg = fmt.Sprintf("[WARN] Assessment failed: %v (%v)", e.host, e.report.StatusMessage)
+						msg = fmt.Sprintf("[WARN] Assessment failed: %v", e.host)
 					} else if len(e.report.Endpoints) > 1 {
-						msg = fmt.Sprintf("[INFO] Assessment complete: %v (%v hosts in %v seconds)",
-							e.host, len(e.report.Endpoints), (e.report.TestTime-e.report.StartTime)/1000)
+						msg = fmt.Sprintf("[INFO] Assessment complete: %v",
+							e.host)
 					} else {
-						msg = fmt.Sprintf("[INFO] Assessment complete: %v (%v host in %v seconds)",
-							e.host, len(e.report.Endpoints), (e.report.TestTime-e.report.StartTime)/1000)
+						msg = fmt.Sprintf("[INFO] Assessment complete: %v",
+							e.host)
 					}
 
 					for _, endpoint := range e.report.Endpoints {
@@ -1023,9 +1005,6 @@ func main() {
 
 			fmt.Println(string(results))
 
-			if logLevel >= LOG_INFO {
-				log.Println("[INFO] All assessments complete; shutting down")
-			}
 
 			return
 		}
