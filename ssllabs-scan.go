@@ -53,7 +53,7 @@ const (
 
 //var USER_AGENT = "ssllabs-scan v1.2.0 (dev $Id$)"
 
-// var logLevel = LOG_NOTICE
+var logLevel = LOG_NOTICE
 
 // How many assessment do we have in progress?
 var activeAssessments = 0
